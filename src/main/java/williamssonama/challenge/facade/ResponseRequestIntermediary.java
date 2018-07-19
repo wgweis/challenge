@@ -52,14 +52,14 @@ public class ResponseRequestIntermediary {
 
     private List<RangeTuple> getSortedList(List<Integer[]> input, ResponseDataTransferObject rto) {
         List<RangeTuple> formattedList = new ArrayList<>();
-        for (Integer[] rangeIndicator: input) {
+        for (int i = 0; i < input.size(); i++) {
+            Integer[] rangeIndicator = input.get(i);
             if (rangeIndicator[0] > rangeIndicator[1]) {
                 rto.addWarning("Invalid range Element encountered: Start of " +  rangeIndicator[0] + " cannot be greater than end of " + rangeIndicator[1] + ": Skipping this element.");
                 continue;
             }
-
-            formattedList.add(new RangeTuple(rangeIndicator[0], RANGE_TYPE.START));
-            formattedList.add(new RangeTuple(rangeIndicator[1], RANGE_TYPE.END));
+            formattedList.add(new RangeTuple(rangeIndicator[0], RANGE_TYPE.START, "s" + i, "e" + i));
+            formattedList.add(new RangeTuple(rangeIndicator[1], RANGE_TYPE.END, "s" + i, "e" + i));
         }
         formattedList.sort(Comparator.comparingInt((RangeTuple r) -> r.getRangeValue()));
         return formattedList;

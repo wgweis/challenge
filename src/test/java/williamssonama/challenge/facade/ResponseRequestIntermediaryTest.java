@@ -34,10 +34,19 @@ public class ResponseRequestIntermediaryTest {
     public void processRequestTest() {
 
         List<Integer[]> list = new ArrayList<>();
-        list.add(new Integer[] {1, 2});
-        list.add(new Integer[] {3, 4});
+//        list.add(new Integer[] {1, 2});
+//        list.add(new Integer[] {3, 4});
+//        list.add(new Integer[] {2, 5});
+//        list.add(new Integer[] {0, 6});
+
+//        list.add(new Integer[] {0, 8});
+//        list.add(new Integer[] {1, 2});
+//        list.add(new Integer[] {3, 5});
+
+        list.add(new Integer[] {0, 3});
         list.add(new Integer[] {2, 5});
-        list.add(new Integer[] {0, 6});
+        list.add(new Integer[] {6, 10});
+        list.add(new Integer[] {7, 8});
 
         String gsonList = gson.toJson(list);
 

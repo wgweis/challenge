@@ -3,8 +3,7 @@ package williamssonama.challenge.service;
 import org.springframework.stereotype.Component;
 import williamssonama.challenge.model.RangeTuple;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Component
 public class RangeReducer {
@@ -31,28 +30,46 @@ public class RangeReducer {
     public List<Integer[]> reduceRangeList(List<RangeTuple> list) {
         List<Integer[]> reducedRanges = new ArrayList<>();
 
-        Integer[] tuple =  new Integer[2];
+        NodeSearch searcher = new NodeSearch();
+
         for (RangeTuple rt: list) {
             switch (rt.getRangeType()) {
-                case START: if (tuple[0] == null) {
-                                tuple[0] = new Integer(rt.getRangeValue());
-                            } else if (tuple[1] != null && tuple[0] > tuple[1]) {
-                                System.out.println("Range output [" + tuple[0] + ", " + tuple[1] + "]");
-                                tuple[0] = new Integer(rt.getRangeValue());
-                                tuple[1] = null;
+                case START: if (searcher.currentStart == null) {
+                                searcher.currentStart = rt;
+                                searcher.visitedStartNodes.put(rt.getStartIdentifier(), rt);
+                            } else {
+                                searcher.visitedStartNodes.put(rt.getStartIdentifier(), rt);
                             }
                             break;
-                case END: if (tuple[0] == null) {
+                case END: if (searcher.currentStart == null) {
                              throw new IllegalArgumentException("End node found before start: " + rt.getRangeType() );
-                          } else {
-                             tuple[1] = rt.getRangeValue();
+                          } else{
+                             // always remove the matching start node from the visited Set
+                             searcher.visitedStartNodes.remove(rt.getStartIdentifier());
+                             if (rt.getStartIdentifier().equals(searcher.currentStart.getStartIdentifier())) {
+                                 if (searcher.visitedStartNodes.isEmpty()) {
+                                     System.out.println("Range output [" + searcher.currentStart.getRangeValue() + ", " + rt.getRangeValue() + "]");
+                                     searcher.currentStart = null;
+                                 } else {
+                                     // continue on but with the current start value but the identifiers of the next entry in the TreeMap
+                                     Optional<RangeTuple> nextVisited
+                                             = searcher.visitedStartNodes.entrySet().stream().findFirst().map(r -> r.getValue());
+                                     searcher.currentStart.setStartIdentifier(nextVisited.get().getStartIdentifier());
+                                     searcher.currentStart.setEndIdentifier(nextVisited.get().getEndIdentifier());
+                                 }
+                             }
                           }
                           break;
                 default:  throw new IllegalStateException("Undefined tuple type encountered: " + rt);
             }
         }
-        System.out.println("Range output [" + tuple[0] + ", " + tuple[1] + "]");
 
         return reducedRanges;
+    }
+
+    private class NodeSearch {
+        RangeTuple currentStart;
+
+        Map<String, RangeTuple> visitedStartNodes = new LinkedHashMap<>();
     }
 }
