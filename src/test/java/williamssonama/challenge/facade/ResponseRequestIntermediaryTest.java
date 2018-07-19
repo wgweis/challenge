@@ -50,11 +50,7 @@ public class ResponseRequestIntermediaryTest {
 
         String gsonList = gson.toJson(list);
 
-        System.out.println("Here's the array: " + gson.toJson(list));
-
-        String serviceResponse = rri.processRequest(gsonList);
-
-        ResponseDataTransferObject responseDataTransferObject = gson.fromJson(serviceResponse, responseDataTransferObjectType);
+        ResponseDataTransferObject responseDataTransferObject = rri.processRequest(gsonList);
 
         assertTrue("Expected non-empty result back", responseDataTransferObject.hasElements());
 

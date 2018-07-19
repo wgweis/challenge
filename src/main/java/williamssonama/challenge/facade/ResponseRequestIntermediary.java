@@ -3,7 +3,6 @@ package williamssonama.challenge.facade;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import williamssonama.challenge.model.RANGE_TYPE;
@@ -12,7 +11,6 @@ import williamssonama.challenge.model.ResponseDataTransferObject;
 import williamssonama.challenge.service.RangeReducer;
 
 import java.lang.reflect.Type;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -32,7 +30,7 @@ public class ResponseRequestIntermediary {
         this.rangeReducer = rangeReducer;
     }
 
-    public String processRequest(String gsonList) {
+    public ResponseDataTransferObject processRequest(String gsonList) {
         ResponseDataTransferObject responseDataTransferObject = new ResponseDataTransferObject();
 
         try {
@@ -47,7 +45,7 @@ public class ResponseRequestIntermediary {
             responseDataTransferObject.addError("Invalid Range Array List.  Could not process. " + (gsonList.isEmpty()? "null": gsonList.substring(0, Math.min(gsonList.length(), 1000))));
         }
 
-        return gson.toJson(responseDataTransferObject);
+        return responseDataTransferObject;
     }
 
     private List<RangeTuple> getSortedList(List<Integer[]> input, ResponseDataTransferObject rto) {
