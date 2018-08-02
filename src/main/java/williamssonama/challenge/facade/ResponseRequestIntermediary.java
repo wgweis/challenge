@@ -73,10 +73,10 @@ public class ResponseRequestIntermediary {
                 rto.addWarning("Invalid range Element encountered: Start of " +  rangeIndicator[0] + " cannot be greater than end of " + rangeIndicator[1] + ": Skipping this element.");
                 continue;
             }
-            formattedList.add(new RangeTuple(rangeIndicator[0], RANGE_TYPE.START, "s" + i));
-            formattedList.add(new RangeTuple(rangeIndicator[1], RANGE_TYPE.END, "s" + i));
+            formattedList.add(new RangeTuple(rangeIndicator[0], RANGE_TYPE.START, i));
+            formattedList.add(new RangeTuple(rangeIndicator[1], RANGE_TYPE.END, i));
         }
-        formattedList.sort(Comparator.comparingInt((RangeTuple r) -> r.getRangeValue()));
+        formattedList.sort((r, t) -> r.compareTo(t));
         return formattedList;
     }
 }
